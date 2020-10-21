@@ -1,0 +1,4 @@
+name: PopolServer
+version: 1.0
+author: Nathan Fallet
+main: me.nathanfallet.popolserver.BungeePopolServer
