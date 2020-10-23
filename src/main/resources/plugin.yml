@@ -3,3 +3,6 @@ version: 1.0
 author: Nathan Fallet
 main: me.nathanfallet.popolserver.PopolServer
 api-version: 1.16
+commands:
+    menu:
+        description: "Afficher le menu pour changer de serveur"

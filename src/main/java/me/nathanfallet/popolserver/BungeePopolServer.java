@@ -27,9 +27,6 @@ public class BungeePopolServer extends Plugin {
     // Enable plugin
     @Override
     public void onEnable() {
-        // Enable plugin
-        getLogger().info("Enabling BungeePopolServer...");
-
         // Store instance
         instance = this;
 
