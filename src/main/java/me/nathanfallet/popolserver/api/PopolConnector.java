@@ -16,6 +16,10 @@ public class PopolConnector {
         this.token = token;
     }
 
+    /**
+     * Servers
+     */
+
     // Get server list
     public void getServer(CompletionHandler<APIServer[]> completionHandler) {
         // Send GET to server
@@ -39,6 +43,23 @@ public class PopolConnector {
                         // Awesome, we don't need to do anything here
                     }
                 });
+    }
+
+    /**
+     * Players
+     */
+
+    // Get a player by uuid
+    public void getPlayer(String playerUUID, CompletionHandler<APIPlayer> completionHandler) {
+        // Send GET to player/:uuid
+        new APIRequest<APIPlayer>("GET", "/player/" + playerUUID).execute(APIPlayer.class, completionHandler);
+    }
+
+    // Update a player
+    public void putPlayer(APIPlayer player, CompletionHandler<APIPlayer> completionHandler) {
+        // Send PUT to player/:uuid
+        new APIRequest<APIPlayer>("PUT", "/player/" + player.uuid).withHeader("token", token)
+                .withBody(new GsonBuilder().create().toJson(player)).execute(APIPlayer.class, completionHandler);
     }
 
 }
