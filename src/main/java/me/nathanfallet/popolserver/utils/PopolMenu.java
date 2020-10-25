@@ -47,7 +47,7 @@ public class PopolMenu {
                         // If slot is specified
                         if (server.slot != -1) {
                             // Create item
-                            ItemStack item = new ItemStack(Material.getMaterial(server.icon));
+                            ItemStack item = new ItemStack(Material.getMaterial(server.icon.toUpperCase()));
                             ItemMeta meta = item.getItemMeta();
 
                             // Set server name
