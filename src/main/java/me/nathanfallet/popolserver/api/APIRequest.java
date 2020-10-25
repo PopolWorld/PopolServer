@@ -88,10 +88,9 @@ public class APIRequest<T> {
             // Set body
             if (body != null) {
                 con.setDoOutput(true);
-                con.setRequestProperty("Content-Type", "application/json; utf-8");
+                con.setRequestProperty("Content-Type", "application/json; charset=utf-8");
                 try (OutputStream os = con.getOutputStream()) {
-                    byte[] input = body.getBytes("utf-8");
-                    os.write(input, 0, input.length);
+                    os.write(body.getBytes("utf-8"));
                 }
             }
 
