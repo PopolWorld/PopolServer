@@ -6,6 +6,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import me.nathanfallet.popolserver.api.APIServer;
 import me.nathanfallet.popolserver.api.PopolConnector;
 import me.nathanfallet.popolserver.commands.MenuCommand;
+import me.nathanfallet.popolserver.events.InventoryClick;
 import me.nathanfallet.popolserver.events.PlayerJoin;
 
 public class PopolServer extends JavaPlugin {
@@ -28,6 +29,7 @@ public class PopolServer extends JavaPlugin {
         instance = this;
 
         // Register events
+        Bukkit.getPluginManager().registerEvents(new InventoryClick(), this);
         Bukkit.getPluginManager().registerEvents(new PlayerJoin(), this);
 
         // Register commands
