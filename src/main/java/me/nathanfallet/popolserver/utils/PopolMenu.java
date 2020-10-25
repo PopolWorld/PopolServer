@@ -40,7 +40,7 @@ public class PopolMenu {
                     cache = object;
 
                     // Create menu
-                    Inventory menu = Bukkit.createInventory(null, 29, title);
+                    Inventory menu = Bukkit.createInventory(null, 27, title);
 
                     // Fill menu with servers
                     for (APIServer server : object) {
