@@ -56,9 +56,15 @@ public class PopolMenu {
                             // Create description
                             List<String> lore = new ArrayList<>();
                             lore.add("");
-                            lore.add(ChatColor.AQUA + "" + server.players + " joueurs");
-                            lore.add("");
-                            lore.add(server.status.equals("online") ? (ChatColor.GREEN + "En ligne") : (ChatColor.RED + "Hors ligne"));
+
+                            // Check if server is online
+                            if (server.status.equals("online")) {
+                                lore.add(ChatColor.AQUA + "" + server.players + " joueurs");
+                                lore.add("");
+                                lore.add(ChatColor.GREEN + "En ligne");
+                            } else {
+                                lore.add(ChatColor.RED + "Hors ligne");
+                            }
 
                             // Set description
                             meta.setLore(lore);

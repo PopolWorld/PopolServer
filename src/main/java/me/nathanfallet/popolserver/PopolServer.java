@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -51,6 +52,39 @@ public class PopolServer extends JavaPlugin {
 
         // Send status
         sendStatus();
+
+        // Register tasks
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
+            @Override
+            public void run() {
+                // Get server from cache
+                APIServer cachedAPIServer = getConnector().getFromCache();
+
+                // Create scoreboard and send it to everyone
+                List<String> headerLines = new ArrayList<>();
+                List<String> footerLines = new ArrayList<>();
+                headerLines.add(ChatColor.LIGHT_PURPLE + "");
+                headerLines.add(ChatColor.LIGHT_PURPLE + "" + ChatColor.BOLD + "Serveur :");
+                headerLines.add(ChatColor.WHITE + (cachedAPIServer != null ? cachedAPIServer.name : "Chargement..."));
+                headerLines.add(ChatColor.AQUA + "");
+                headerLines.add(ChatColor.AQUA + "" + ChatColor.BOLD + "Joueurs :");
+                headerLines.add(ChatColor.WHITE + "" + getPlayers().size() + " joueurs");
+                headerLines.add(ChatColor.YELLOW + "");
+                footerLines.add(ChatColor.YELLOW + "" + ChatColor.BOLD + "play.popolworld.fr");
+
+                // Apply to eveyone
+                for (Player player : Bukkit.getOnlinePlayers()) {
+                    // Get extra lines from other plugins
+                    List<String> lines = new ArrayList<>();
+                    lines.addAll(headerLines);
+                    //lines.addAll(extraLines);
+                    lines.addAll(footerLines);
+
+                    // Apply
+                    getPlayer(player.getUniqueId()).getScoreboard().update(player, lines);
+                }
+            }
+        }, 0, 20);
     }
 
     // Disable plugin

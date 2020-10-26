@@ -15,11 +15,13 @@ public class PopolPlayer {
 
     // Properties
     private UUID uuid;
+    private PlayerScoreboard scoreboard;
 
     // Bukkit constructor
     public PopolPlayer(final Player player) {
         // Set properties
         this.uuid = player.getUniqueId();
+        this.scoreboard = new PlayerScoreboard("PopolWorld");
 
         // Update player data
         PopolServer.getInstance().getConnector().putPlayer(
@@ -54,6 +56,11 @@ public class PopolPlayer {
     // Retrieve UUID
     public UUID getUUID() {
         return uuid;
+    }
+
+    // Retrieve scoreboard
+    public PlayerScoreboard getScoreboard() {
+        return scoreboard;
     }
 
 }

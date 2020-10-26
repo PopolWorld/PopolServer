@@ -10,10 +10,18 @@ public class PopolConnector {
     private String id;
     private String token;
 
+    // Cached current server
+    private APIServer cached;
+
     // Constructor
     public PopolConnector(String id, String token) {
         this.id = id;
         this.token = token;
+    }
+
+    // Retrieve server from cache
+    public APIServer getFromCache() {
+        return cached;
     }
 
     /**
@@ -40,7 +48,8 @@ public class PopolConnector {
                 .execute(APIServer.class, new CompletionHandler<APIServer>() {
                     @Override
                     public void completionHandler(APIServer object, APIResponseStatus status) {
-                        // Awesome, we don't need to do anything here
+                        // Update cache
+                        cached = object;
                     }
                 });
     }
