@@ -5,6 +5,8 @@ import java.io.File;
 import me.nathanfallet.popolserver.api.APIServer;
 import me.nathanfallet.popolserver.api.PopolConnector;
 import me.nathanfallet.popolserver.commands.StopCommand;
+import me.nathanfallet.popolserver.events.PlayerJoin;
+import me.nathanfallet.popolserver.events.PlayerQuit;
 import me.nathanfallet.popolserver.events.PluginMessage;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.config.Configuration;
@@ -31,6 +33,8 @@ public class BungeePopolServer extends Plugin {
         instance = this;
 
         // Register events
+        getProxy().getPluginManager().registerListener(this, new PlayerJoin());
+        getProxy().getPluginManager().registerListener(this, new PlayerQuit());
         getProxy().getPluginManager().registerListener(this, new PluginMessage());
 
         // Register commands
