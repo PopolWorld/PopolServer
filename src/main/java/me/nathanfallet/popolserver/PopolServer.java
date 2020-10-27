@@ -1,17 +1,24 @@
 package me.nathanfallet.popolserver;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import me.nathanfallet.popolserver.api.APIServer;
 import me.nathanfallet.popolserver.api.PopolConnector;
 import me.nathanfallet.popolserver.commands.MenuCommand;
+import me.nathanfallet.popolserver.commands.SetSpawnCommand;
+import me.nathanfallet.popolserver.commands.SpawnCommand;
 import me.nathanfallet.popolserver.events.InventoryClick;
 import me.nathanfallet.popolserver.events.PlayerJoin;
 import me.nathanfallet.popolserver.events.PlayerQuit;
@@ -42,6 +49,9 @@ public class PopolServer extends JavaPlugin {
             getPlayers().add(new PopolPlayer(player));
         }
 
+        // Register channel to talk with BungeeCord
+        Bukkit.getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+
         // Register events
         Bukkit.getPluginManager().registerEvents(new InventoryClick(), this);
         Bukkit.getPluginManager().registerEvents(new PlayerJoin(), this);
@@ -49,6 +59,8 @@ public class PopolServer extends JavaPlugin {
 
         // Register commands
         getCommand("menu").setExecutor(new MenuCommand());
+        getCommand("spawn").setExecutor(new SpawnCommand());
+        getCommand("setspawn").setExecutor(new SetSpawnCommand());
 
         // Send status
         sendStatus();
@@ -77,7 +89,7 @@ public class PopolServer extends JavaPlugin {
                     // Get extra lines from other plugins
                     List<String> lines = new ArrayList<>();
                     lines.addAll(headerLines);
-                    //lines.addAll(extraLines);
+                    // lines.addAll(extraLines);
                     lines.addAll(footerLines);
 
                     // Apply
@@ -144,6 +156,47 @@ public class PopolServer extends JavaPlugin {
     // Send current server status
     public void sendStatus() {
         getConnector().putServer(new APIServer(null, null, null, null, null, null, "online", getPlayers().size()));
+    }
+
+    // Get spawn location
+    public Location getSpawn() {
+        // Get file
+        File f = new File(getDataFolder(), "spawn.yml");
+
+        // Return default spawn location if it doesn't exist
+        if (!f.exists()) {
+            return Bukkit.getWorlds().get(0).getSpawnLocation();
+        }
+
+        // Else, read from file
+        FileConfiguration config = YamlConfiguration.loadConfiguration(f);
+        Location l = new Location(Bukkit.getWorld(config.getString("world")), config.getDouble("x"),
+                config.getDouble("y"), config.getDouble("z"));
+        l.setYaw(config.getLong("yaw"));
+        l.setPitch(config.getLong("pitch"));
+        return l;
+    }
+
+    // Set spawn location
+    public void setSpawn(Location l) {
+        // Get file
+        File f = new File(getDataFolder(), "spawn.yml");
+        FileConfiguration config = YamlConfiguration.loadConfiguration(f);
+
+        // Set location
+        config.set("world", l.getWorld().getName());
+        config.set("x", l.getX());
+        config.set("y", l.getY());
+        config.set("z", l.getZ());
+        config.set("yaw", l.getYaw());
+        config.set("pitch", l.getPitch());
+
+        // Save
+        try {
+            config.save(f);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

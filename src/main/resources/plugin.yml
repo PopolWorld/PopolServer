@@ -6,3 +6,8 @@ api-version: 1.16
 commands:
     menu:
         description: "Afficher le menu pour changer de serveur"
+    spawn:
+        description: Se teleporter au spawn
+    setspawn:
+        description: Definir le point de spawn
+        permission: zabrimanager.setspawn
