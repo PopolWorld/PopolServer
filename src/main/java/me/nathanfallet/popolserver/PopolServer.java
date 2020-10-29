@@ -17,6 +17,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import me.nathanfallet.popolserver.api.APIServer;
 import me.nathanfallet.popolserver.api.PopolConnector;
 import me.nathanfallet.popolserver.commands.MenuCommand;
+import me.nathanfallet.popolserver.commands.MoneyCommand;
 import me.nathanfallet.popolserver.commands.SetSpawnCommand;
 import me.nathanfallet.popolserver.commands.SpawnCommand;
 import me.nathanfallet.popolserver.events.InventoryClick;
@@ -60,6 +61,7 @@ public class PopolServer extends JavaPlugin {
 
         // Register commands
         getCommand("menu").setExecutor(new MenuCommand());
+        getCommand("money").setExecutor(new MoneyCommand());
         getCommand("spawn").setExecutor(new SpawnCommand());
         getCommand("setspawn").setExecutor(new SetSpawnCommand());
 

@@ -5,7 +5,9 @@ main: me.nathanfallet.popolserver.PopolServer
 api-version: 1.16
 commands:
     menu:
-        description: "Afficher le menu pour changer de serveur"
+        description: Afficher le menu pour changer de serveur
+    money:
+        description: Actualiser et afficher son compte
     spawn:
         description: Se teleporter au spawn
     setspawn:
