@@ -25,6 +25,7 @@ import me.nathanfallet.popolserver.events.PlayerJoin;
 import me.nathanfallet.popolserver.events.PlayerQuit;
 import me.nathanfallet.popolserver.utils.PopolMoney;
 import me.nathanfallet.popolserver.utils.PopolPlayer;
+import me.nathanfallet.popolserver.utils.ScoreboardLinesGenerator;
 
 public class PopolServer extends JavaPlugin {
 
@@ -39,6 +40,7 @@ public class PopolServer extends JavaPlugin {
     // Properties
     private PopolConnector connector;
     private List<PopolPlayer> players;
+    private List<ScoreboardLinesGenerator> scoreboardGenerators;
 
     // Enable plugin
     @Override
@@ -84,7 +86,7 @@ public class PopolServer extends JavaPlugin {
                 headerLines.add(ChatColor.WHITE + "" + getPlayers().size() + " joueurs");
                 headerLines.add(ChatColor.GREEN + "");
                 headerLines.add(ChatColor.GREEN + "" + ChatColor.BOLD + PopolMoney.name + " :");
-                headerLines.add(ChatColor.YELLOW + "");
+                footerLines.add(ChatColor.YELLOW + "");
                 footerLines.add(ChatColor.YELLOW + "" + ChatColor.BOLD + "play.popolworld.fr");
 
                 // Apply to eveyone
@@ -101,7 +103,9 @@ public class PopolServer extends JavaPlugin {
                             + (pp.getCached() != null ? pp.getCached().money + " unités" : "Chargement..."));
 
                     // Extra lines from other plugins
-                    // lines.addAll(extraLines);
+                    for (ScoreboardLinesGenerator generator : getScoreboardGenerators()) {
+                        lines.addAll(generator.generateLines(player, pp));
+                    }
 
                     // Footer
                     lines.addAll(footerLines);
@@ -118,6 +122,9 @@ public class PopolServer extends JavaPlugin {
     public void onDisable() {
         // Remove players
         getPlayers().clear();
+
+        // Clear scoreboard generators
+        scoreboardGenerators.clear();
 
         // Send status
         sendStatus();
@@ -165,6 +172,17 @@ public class PopolServer extends JavaPlugin {
 
         // No player found
         return null;
+    }
+
+    // Retrieve scoreboard generators
+    public List<ScoreboardLinesGenerator> getScoreboardGenerators() {
+        // Init list if needed
+        if (scoreboardGenerators == null) {
+            scoreboardGenerators = new ArrayList<>();
+        }
+
+        // Return list
+        return scoreboardGenerators;
     }
 
     // Send current server status
