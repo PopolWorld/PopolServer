@@ -22,6 +22,7 @@ import me.nathanfallet.popolserver.commands.SpawnCommand;
 import me.nathanfallet.popolserver.events.InventoryClick;
 import me.nathanfallet.popolserver.events.PlayerJoin;
 import me.nathanfallet.popolserver.events.PlayerQuit;
+import me.nathanfallet.popolserver.utils.PopolMoney;
 import me.nathanfallet.popolserver.utils.PopolPlayer;
 
 public class PopolServer extends JavaPlugin {
@@ -72,24 +73,35 @@ public class PopolServer extends JavaPlugin {
                 // Get server from cache
                 APIServer cachedAPIServer = getConnector().getFromCache();
 
-                // Create scoreboard and send it to everyone
+                // Create scoreboard lines
                 List<String> headerLines = new ArrayList<>();
                 List<String> footerLines = new ArrayList<>();
-                headerLines.add(ChatColor.LIGHT_PURPLE + "");
-                headerLines.add(ChatColor.LIGHT_PURPLE + "" + ChatColor.BOLD + "Serveur :");
-                headerLines.add(ChatColor.WHITE + (cachedAPIServer != null ? cachedAPIServer.name : "Chargement..."));
                 headerLines.add(ChatColor.AQUA + "");
-                headerLines.add(ChatColor.AQUA + "" + ChatColor.BOLD + "Joueurs :");
+                headerLines.add(ChatColor.AQUA + "" + ChatColor.BOLD + "Serveur :");
+                headerLines.add(ChatColor.WHITE + (cachedAPIServer != null ? cachedAPIServer.name : "Chargement..."));
                 headerLines.add(ChatColor.WHITE + "" + getPlayers().size() + " joueurs");
+                headerLines.add(ChatColor.GREEN + "");
+                headerLines.add(ChatColor.GREEN + "" + ChatColor.BOLD + PopolMoney.name + " :");
                 headerLines.add(ChatColor.YELLOW + "");
                 footerLines.add(ChatColor.YELLOW + "" + ChatColor.BOLD + "play.popolworld.fr");
 
                 // Apply to eveyone
                 for (Player player : Bukkit.getOnlinePlayers()) {
-                    // Get extra lines from other plugins
+                    // Merge lines
                     List<String> lines = new ArrayList<>();
+                    PopolPlayer pp = getPlayer(player.getUniqueId());
+
+                    // Header
                     lines.addAll(headerLines);
+
+                    // Money
+                    lines.add(ChatColor.WHITE + ""
+                            + (pp.getCached() != null ? pp.getCached().money + " unités" : "Chargement..."));
+
+                    // Extra lines from other plugins
                     // lines.addAll(extraLines);
+
+                    // Footer
                     lines.addAll(footerLines);
 
                     // Apply
