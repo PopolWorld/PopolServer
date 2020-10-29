@@ -21,8 +21,10 @@ import me.nathanfallet.popolserver.commands.MoneyCommand;
 import me.nathanfallet.popolserver.commands.SetSpawnCommand;
 import me.nathanfallet.popolserver.commands.SpawnCommand;
 import me.nathanfallet.popolserver.events.InventoryClick;
+import me.nathanfallet.popolserver.events.PlayerChat;
 import me.nathanfallet.popolserver.events.PlayerJoin;
 import me.nathanfallet.popolserver.events.PlayerQuit;
+import me.nathanfallet.popolserver.events.PlayerRespawn;
 import me.nathanfallet.popolserver.utils.PopolMoney;
 import me.nathanfallet.popolserver.utils.PopolPlayer;
 import me.nathanfallet.popolserver.utils.ScoreboardLinesGenerator;
@@ -58,8 +60,10 @@ public class PopolServer extends JavaPlugin {
 
         // Register events
         Bukkit.getPluginManager().registerEvents(new InventoryClick(), this);
+        Bukkit.getPluginManager().registerEvents(new PlayerChat(), this);
         Bukkit.getPluginManager().registerEvents(new PlayerJoin(), this);
         Bukkit.getPluginManager().registerEvents(new PlayerQuit(), this);
+        Bukkit.getPluginManager().registerEvents(new PlayerRespawn(), this);
 
         // Register commands
         getCommand("menu").setExecutor(new MenuCommand());
