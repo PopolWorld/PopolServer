@@ -73,7 +73,7 @@ public class PopolServer extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new PlayerRespawn(), this);
 
         // Register commands
-        getCommand("leaderboards").setExecutor(new LeaderboardCommand());
+        getCommand("leaderboard").setExecutor(new LeaderboardCommand());
         getCommand("menu").setExecutor(new MenuCommand());
         getCommand("money").setExecutor(new MoneyCommand());
         getCommand("spawn").setExecutor(new SpawnCommand());

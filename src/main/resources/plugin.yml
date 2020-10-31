@@ -4,9 +4,9 @@ author: Nathan Fallet
 main: me.nathanfallet.popolserver.PopolServer
 api-version: 1.16
 commands:
-    leaderboards:
+    leaderboard:
         description: Gérer les classements
-        permission: popolserver.leaderboards
+        permission: popolserver.leaderboard
     menu:
         description: Afficher le menu pour changer de serveur
     money:
