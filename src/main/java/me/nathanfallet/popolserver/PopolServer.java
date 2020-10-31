@@ -3,7 +3,9 @@ package me.nathanfallet.popolserver;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -16,6 +18,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import me.nathanfallet.popolserver.api.APIServer;
 import me.nathanfallet.popolserver.api.PopolConnector;
+import me.nathanfallet.popolserver.commands.LeaderboardCommand;
 import me.nathanfallet.popolserver.commands.MenuCommand;
 import me.nathanfallet.popolserver.commands.MoneyCommand;
 import me.nathanfallet.popolserver.commands.SetSpawnCommand;
@@ -25,9 +28,11 @@ import me.nathanfallet.popolserver.events.PlayerChat;
 import me.nathanfallet.popolserver.events.PlayerJoin;
 import me.nathanfallet.popolserver.events.PlayerQuit;
 import me.nathanfallet.popolserver.events.PlayerRespawn;
+import me.nathanfallet.popolserver.utils.Leaderboard;
+import me.nathanfallet.popolserver.utils.LeaderboardGenerator;
 import me.nathanfallet.popolserver.utils.PopolMoney;
 import me.nathanfallet.popolserver.utils.PopolPlayer;
-import me.nathanfallet.popolserver.utils.ScoreboardLinesGenerator;
+import me.nathanfallet.popolserver.utils.ScoreboardGenerator;
 
 public class PopolServer extends JavaPlugin {
 
@@ -42,7 +47,9 @@ public class PopolServer extends JavaPlugin {
     // Properties
     private PopolConnector connector;
     private List<PopolPlayer> players;
-    private List<ScoreboardLinesGenerator> scoreboardGenerators;
+    private List<ScoreboardGenerator> scoreboardGenerators;
+    private Map<String, LeaderboardGenerator> leaderboardGenerators;
+    private Map<String, Leaderboard> leaderboards;
 
     // Enable plugin
     @Override
@@ -66,6 +73,7 @@ public class PopolServer extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new PlayerRespawn(), this);
 
         // Register commands
+        getCommand("leaderboard").setExecutor(new LeaderboardCommand());
         getCommand("menu").setExecutor(new MenuCommand());
         getCommand("money").setExecutor(new MoneyCommand());
         getCommand("spawn").setExecutor(new SpawnCommand());
@@ -107,7 +115,7 @@ public class PopolServer extends JavaPlugin {
                             + (pp.getCached() != null ? pp.getCached().money + " unités" : "Chargement..."));
 
                     // Extra lines from other plugins
-                    for (ScoreboardLinesGenerator generator : getScoreboardGenerators()) {
+                    for (ScoreboardGenerator generator : getScoreboardGenerators()) {
                         lines.addAll(generator.generateLines(player, pp));
                     }
 
@@ -119,16 +127,35 @@ public class PopolServer extends JavaPlugin {
                 }
             }
         }, 0, 20);
+
+        // Saving task
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
+            @Override
+            public void run() {
+                // Save leaderboards
+                saveLeaderboards();
+            }
+        }, 300 * 20, 300 * 20);
     }
 
     // Disable plugin
     @Override
     public void onDisable() {
         // Remove players
-        getPlayers().clear();
+        for (PopolPlayer player : getPlayers()) {
+            player.getScoreboard().kill();
+        }
+        players = null;
 
         // Clear scoreboard generators
-        scoreboardGenerators.clear();
+        scoreboardGenerators = null;
+
+        // Save leaderboards
+        saveLeaderboards();
+
+        // Clear leaderboards and generators
+        leaderboards = null;
+        leaderboardGenerators = null;
 
         // Send status
         sendStatus();
@@ -179,7 +206,7 @@ public class PopolServer extends JavaPlugin {
     }
 
     // Retrieve scoreboard generators
-    public List<ScoreboardLinesGenerator> getScoreboardGenerators() {
+    public List<ScoreboardGenerator> getScoreboardGenerators() {
         // Init list if needed
         if (scoreboardGenerators == null) {
             scoreboardGenerators = new ArrayList<>();
@@ -187,6 +214,68 @@ public class PopolServer extends JavaPlugin {
 
         // Return list
         return scoreboardGenerators;
+    }
+
+    // Retrieve leaderboard generators
+    public Map<String, LeaderboardGenerator> getLeaderboardGenerators() {
+        // Init list if needed
+        if (leaderboardGenerators == null) {
+            leaderboardGenerators = new HashMap<>();
+        }
+
+        // Return list
+        return leaderboardGenerators;
+    }
+
+    // Retrieve leaderboards
+    public Map<String, Leaderboard> getLeaderboards() {
+        // Init list if needed
+        if (leaderboards == null) {
+            leaderboards = new HashMap<>();
+
+            // And read from file
+            FileConfiguration file = YamlConfiguration.loadConfiguration(new File(getDataFolder(), "leaderboards.yml"));
+            for (String key : file.getKeys(false)) {
+                // Extract variables
+                Location location = new Location(Bukkit.getWorld(file.getString(key + ".location.world")),
+                        file.getDouble(key + ".location.x"), file.getDouble(key + ".location.y"),
+                        file.getDouble(key + ".location.z"));
+                String type = file.getString(key + ".type");
+                int limit = file.getInt(key + ".limit");
+
+                // Put in list
+                leaderboards.put(key, new Leaderboard(location, type, limit));
+            }
+        }
+
+        // Return list
+        return leaderboards;
+    }
+
+    // Save leaderboards
+    public void saveLeaderboards() {
+        // Get file
+        File empty = new File(getDataFolder(), ".empty");
+        File source = new File(getDataFolder(), "leaderboards.yml");
+        FileConfiguration file = YamlConfiguration.loadConfiguration(empty);
+
+        // Set keys
+        for (String key : leaderboards.keySet()) {
+            Leaderboard leaderboard = leaderboards.get(key);
+            file.set(key + ".location.world", leaderboard.getLocation().getWorld().getName());
+            file.set(key + ".location.x", leaderboard.getLocation().getX());
+            file.set(key + ".location.y", leaderboard.getLocation().getY());
+            file.set(key + ".location.z", leaderboard.getLocation().getZ());
+            file.set(key + ".type", leaderboard.getType());
+            file.set(key + ".limit", leaderboard.getLimit());
+        }
+
+        // Save file
+        try {
+            file.save(source);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     // Send current server status

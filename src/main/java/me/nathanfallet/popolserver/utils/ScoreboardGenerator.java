@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.bukkit.entity.Player;
 
-public interface ScoreboardLinesGenerator {
+public interface ScoreboardGenerator {
 
     List<String> generateLines(Player player, PopolPlayer pp);
     

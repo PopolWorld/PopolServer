@@ -4,6 +4,9 @@ author: Nathan Fallet
 main: me.nathanfallet.popolserver.PopolServer
 api-version: 1.16
 commands:
+    leaderboards:
+        description: Gérer les classements
+        permission: popolserver.leaderboards
     menu:
         description: Afficher le menu pour changer de serveur
     money:
@@ -12,4 +15,4 @@ commands:
         description: Se teleporter au spawn
     setspawn:
         description: Definir le point de spawn
-        permission: zabrimanager.setspawn
+        permission: popolserver.setspawn
