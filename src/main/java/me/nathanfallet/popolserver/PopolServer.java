@@ -265,7 +265,7 @@ public class PopolServer extends JavaPlugin {
         FileConfiguration file = YamlConfiguration.loadConfiguration(empty);
 
         // Set keys
-        for (String key : leaderboards.keySet()) {
+        for (String key : getLeaderboards().keySet()) {
             Leaderboard leaderboard = leaderboards.get(key);
             file.set(key + ".location.world", leaderboard.getLocation().getWorld().getName());
             file.set(key + ".location.x", leaderboard.getLocation().getX());
