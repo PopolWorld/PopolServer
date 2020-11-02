@@ -125,6 +125,11 @@ public class PopolServer extends JavaPlugin {
                     // Apply
                     getPlayer(player.getUniqueId()).getScoreboard().update(player, lines);
                 }
+
+                // Refresh leaderboards
+                for (Leaderboard leaderboard : getLeaderboards().values()) {
+                    leaderboard.update();
+                }
             }
         }, 0, 20);
 
