@@ -125,11 +125,6 @@ public class PopolServer extends JavaPlugin {
                     // Apply
                     getPlayer(player.getUniqueId()).getScoreboard().update(player, lines);
                 }
-
-                // Refresh leaderboards
-                for (Leaderboard leaderboard : getLeaderboards().values()) {
-                    leaderboard.update();
-                }
             }
         }, 0, 20);
 
@@ -137,6 +132,11 @@ public class PopolServer extends JavaPlugin {
         Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
             @Override
             public void run() {
+                // Refresh leaderboards
+                for (Leaderboard leaderboard : getLeaderboards().values()) {
+                    leaderboard.update();
+                }
+
                 // Save leaderboards
                 saveLeaderboards();
             }
@@ -172,7 +172,8 @@ public class PopolServer extends JavaPlugin {
         if (connector == null) {
             try {
                 // Create connector with config
-                connector = new PopolConnector(getConfig().getString("id"), getConfig().getString("token"));
+                connector = new PopolConnector(getConfig().getString("id"), getConfig().getString("token"),
+                        getConfig().getString("host"));
             } catch (Exception e) {
                 // Error
                 e.printStackTrace();

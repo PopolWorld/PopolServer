@@ -61,7 +61,8 @@ public class BungeePopolServer extends Plugin {
                         .load(new File(getDataFolder(), "config.yml"));
 
                 // Create connector with config
-                connector = new PopolConnector(config.getString("id"), config.getString("token"));
+                connector = new PopolConnector(config.getString("id"), config.getString("token"),
+                        config.getString("host"));
             } catch (Exception e) {
                 // Error
                 e.printStackTrace();
@@ -77,7 +78,8 @@ public class BungeePopolServer extends Plugin {
 
     // Send current server status
     public void sendStatus() {
-        getConnector().putServer(new APIServer(null, null, null, null, null, null, "online", getProxy().getOnlineCount()));
+        getConnector()
+                .putServer(new APIServer(null, null, null, null, null, null, "online", getProxy().getOnlineCount()));
     }
 
 }

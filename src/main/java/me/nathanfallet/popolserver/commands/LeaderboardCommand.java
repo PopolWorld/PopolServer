@@ -23,11 +23,13 @@ public class LeaderboardCommand implements CommandExecutor {
 					// Check if id already exists
 					if (!PopolServer.getInstance().getLeaderboards().containsKey(args[1])) {
 						// Create it
-						Player p = (Player) sender;
-						PopolServer.getInstance().getLeaderboards().put(args[1],
-								new Leaderboard(p.getLocation(), args[2], 10));
-						p.sendMessage(ChatColor.GREEN + "Le classement " + ChatColor.YELLOW + args[1] + ChatColor.GREEN
-								+ " a bien été créé !");
+						Leaderboard leaderboard = new Leaderboard(((Player) sender).getLocation(), args[2], 10);
+						PopolServer.getInstance().getLeaderboards().put(args[1], leaderboard);
+						sender.sendMessage(ChatColor.GREEN + "Le classement " + ChatColor.YELLOW + args[1]
+								+ ChatColor.GREEN + " a bien été créé !");
+
+						// Update entities
+						leaderboard.update();
 					} else {
 						// Already exists
 						sender.sendMessage(ChatColor.RED + "Le classement " + ChatColor.DARK_RED + args[1]
@@ -66,7 +68,13 @@ public class LeaderboardCommand implements CommandExecutor {
 				// Check args
 				if (args.length == 2) {
 					// Get leaderboard
-					if (PopolServer.getInstance().getLeaderboards().containsKey(args[1])) {
+					Leaderboard leaderboard = PopolServer.getInstance().getLeaderboards().get(args[1]);
+
+					// Check if it exists
+					if (leaderboard != null) {
+						// Kill leaderboard first
+						leaderboard.kill();
+
 						// Delete it
 						PopolServer.getInstance().getLeaderboards().remove(args[1]);
 						sender.sendMessage(ChatColor.GREEN + "Le classement " + ChatColor.YELLOW + args[1]

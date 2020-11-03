@@ -15,15 +15,17 @@ import com.google.gson.GsonBuilder;
 public class APIRequest<T> {
 
     private String method;
+    private String host;
     private String path;
     private HashMap<String, String> headers;
     private HashMap<String, Object> queryItems;
     private String body;
     private int httpResult;
 
-    public APIRequest(String method, String path) {
+    public APIRequest(String method, String host, String path) {
         // Get request parameters
         this.method = method;
+        this.host = host;
         this.path = path;
         this.headers = new HashMap<>();
         this.queryItems = new HashMap<>();
@@ -46,10 +48,7 @@ public class APIRequest<T> {
 
     public URL getURL() {
         try {
-            String protocol = "https";
-            String host = "api.popolworld.fr";
-
-            URI uri = new URI(protocol, null, host, 443, path, getQuery(), null);
+            URI uri = new URI("https", null, host, 443, path, getQuery(), null);
 
             return uri.toURL();
         } catch (Exception e) {
