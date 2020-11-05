@@ -41,6 +41,20 @@ public class LeaderboardCommand implements CommandExecutor {
 				}
 			}
 
+			// List command
+			else if (args[0].equalsIgnoreCase("list")) {
+				// Send header
+				sender.sendMessage(ChatColor.YELLOW + "------ " + ChatColor.GOLD + "Classements existants "
+						+ ChatColor.YELLOW + "------");
+
+				// Iterate leaderboards
+				for (String key : PopolServer.getInstance().getLeaderboards().keySet()) {
+					// Retrieve leaderboard and send info
+					Leaderboard leaderboard = PopolServer.getInstance().getLeaderboards().get(key);
+					sender.sendMessage(ChatColor.GOLD + key + ChatColor.YELLOW + " : " + leaderboard.getType());
+				}
+			}
+
 			// Info command
 			else if (args[0].equalsIgnoreCase("info")) {
 				// Check args
@@ -173,13 +187,14 @@ public class LeaderboardCommand implements CommandExecutor {
 	public void sendHelp(CommandSender sender) {
 		sender.sendMessage(ChatColor.YELLOW + "----- " + ChatColor.GOLD + "Aide du /leaderboard " + ChatColor.YELLOW
 				+ "-----\n" + ChatColor.GOLD + "/leaderboard create <nom> [type] " + ChatColor.YELLOW
-				+ ": Créer un classement.\n" + ChatColor.GOLD + "/leaderboard info <nom> " + ChatColor.YELLOW
-				+ ": Afficher les informations sur un classement.\n" + ChatColor.GOLD + "/leaderboard remove <nom> "
-				+ ChatColor.YELLOW + ": Supprimer un classement.\n" + ChatColor.GOLD + "/leaderboard types "
-				+ ChatColor.YELLOW + ": Afficher les types de classements disponibles.\n" + ChatColor.GOLD
-				+ "/leaderboard settype <nom> <type> " + ChatColor.YELLOW + ": Changer le type d'un classement.\n"
-				+ ChatColor.GOLD + "/leaderboard setlimit <nom> <top> " + ChatColor.YELLOW
-				+ ": Changer le nombre de lignes d'un classement.");
+				+ ": Créer un classement.\n" + ChatColor.GOLD + "/leaderboard list " + ChatColor.YELLOW
+				+ ": Afficher les classements existants.\n" + ChatColor.GOLD + "/leaderboard info <nom> "
+				+ ChatColor.YELLOW + ": Afficher les informations sur un classement.\n" + ChatColor.GOLD
+				+ "/leaderboard remove <nom> " + ChatColor.YELLOW + ": Supprimer un classement.\n" + ChatColor.GOLD
+				+ "/leaderboard types " + ChatColor.YELLOW + ": Afficher les types de classements disponibles.\n"
+				+ ChatColor.GOLD + "/leaderboard settype <nom> <type> " + ChatColor.YELLOW
+				+ ": Changer le type d'un classement.\n" + ChatColor.GOLD + "/leaderboard setlimit <nom> <top> "
+				+ ChatColor.YELLOW + ": Changer le nombre de lignes d'un classement.");
 	}
 
 }
