@@ -7,6 +7,7 @@ public class APIPlayer {
     public Long money;
     public Boolean moderator;
     public Boolean administrator;
+    public APITeam[] teams;
 
     public APIPlayer(String uuid, String name, Long money, Boolean moderator, Boolean administrator) {
         this.uuid = uuid;

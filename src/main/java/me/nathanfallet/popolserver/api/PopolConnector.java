@@ -73,4 +73,56 @@ public class PopolConnector {
                 .withBody(new GsonBuilder().create().toJson(player)).execute(APIPlayer.class, completionHandler);
     }
 
+    /**
+     * Teams
+     */
+
+    // Get team leaderboard
+    public void getTeamLeaderboard(int limit, CompletionHandler<APITeam[]> completionHandler) {
+        // Send GET to team/leaderboard/:limit
+        new APIRequest<APITeam[]>("GET", host, "/team/leaderboard/" + limit).execute(APITeam[].class,
+                completionHandler);
+    }
+
+    // Get a team
+    public void getTeam(String teamId, CompletionHandler<APITeam> completionHandler) {
+        // Send GET to team/:id
+        new APIRequest<APITeam>("GET", host, "/team/" + teamId).execute(APITeam.class, completionHandler);
+    }
+
+    // Update a team
+    public void putTeam(APITeam team, CompletionHandler<APITeam> completionHandler) {
+        // Send PUT to team/:id
+        new APIRequest<APITeam>("PUT", host, "/team/" + team.id).withHeader("token", token)
+                .withBody(new GsonBuilder().create().toJson(team)).execute(APITeam.class, completionHandler);
+    }
+
+    // Delete a team
+    public void deleteTeam(String teamId, CompletionHandler<APIMessage> completionHandler) {
+        // Send DELETE to team/:id
+        new APIRequest<APIMessage>("DELETE", host, "/team/" + teamId).withHeader("token", token)
+                .execute(APIMessage.class, completionHandler);
+    }
+
+    // Create a team
+    public void postTeam(APITeamCreation team, CompletionHandler<APITeam> completionHandler) {
+        // Send POST to team
+        new APIRequest<APITeam>("POST", host, "/team/").withHeader("token", token)
+                .withBody(new GsonBuilder().create().toJson(team)).execute(APITeam.class, completionHandler);
+    }
+
+    // Add member to a team
+    public void postTeamPlayer(String teamId, String playerUuid, CompletionHandler<APITeam> completionHandler) {
+        // Send POST to team/:id/:uuid
+        new APIRequest<APITeam>("POST", host, "/team/" + teamId + "/" + playerUuid).withHeader("token", token)
+                .execute(APITeam.class, completionHandler);
+    }
+
+    // Remove member from a team
+    public void deleteTeamPlayer(String teamId, String playerUuid, CompletionHandler<APITeam> completionHandler) {
+        // Send DELETE to team/:id/:uuid
+        new APIRequest<APITeam>("DELETE", host, "/team/" + teamId + "/" + playerUuid).withHeader("token", token)
+                .execute(APITeam.class, completionHandler);
+    }
+
 }
