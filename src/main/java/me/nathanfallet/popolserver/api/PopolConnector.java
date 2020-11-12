@@ -112,9 +112,11 @@ public class PopolConnector {
     }
 
     // Add member to a team
-    public void postTeamPlayer(String teamId, String playerUuid, CompletionHandler<APITeam> completionHandler) {
+    public void postTeamPlayer(String teamId, String playerUuid, String role,
+            CompletionHandler<APITeam> completionHandler) {
         // Send POST to team/:id/:uuid
         new APIRequest<APITeam>("POST", host, "/team/" + teamId + "/" + playerUuid).withHeader("token", token)
+                .withBody(new GsonBuilder().create().toJson(new APITeamMember(role)))
                 .execute(APITeam.class, completionHandler);
     }
 

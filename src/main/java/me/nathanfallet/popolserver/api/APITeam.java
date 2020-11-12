@@ -6,6 +6,7 @@ public class APITeam {
     public String name;
     public Long money;
     public APIPlayer[] players;
+    public APITeamMember role;
 
     public APITeam(Long id, String name, Long money) {
         this.id = id;
