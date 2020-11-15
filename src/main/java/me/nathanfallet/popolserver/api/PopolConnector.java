@@ -85,7 +85,7 @@ public class PopolConnector {
     }
 
     // Get a team
-    public void getTeam(String teamId, CompletionHandler<APITeam> completionHandler) {
+    public void getTeam(Long teamId, CompletionHandler<APITeam> completionHandler) {
         // Send GET to team/:id
         new APIRequest<APITeam>("GET", host, "/team/" + teamId).execute(APITeam.class, completionHandler);
     }
@@ -98,7 +98,7 @@ public class PopolConnector {
     }
 
     // Delete a team
-    public void deleteTeam(String teamId, CompletionHandler<APIMessage> completionHandler) {
+    public void deleteTeam(Long teamId, CompletionHandler<APIMessage> completionHandler) {
         // Send DELETE to team/:id
         new APIRequest<APIMessage>("DELETE", host, "/team/" + teamId).withHeader("token", token)
                 .execute(APIMessage.class, completionHandler);
@@ -112,7 +112,7 @@ public class PopolConnector {
     }
 
     // Add member to a team
-    public void postTeamPlayer(String teamId, String playerUuid, String role,
+    public void postTeamPlayer(Long teamId, String playerUuid, String role,
             CompletionHandler<APITeam> completionHandler) {
         // Send POST to team/:id/:uuid
         new APIRequest<APITeam>("POST", host, "/team/" + teamId + "/" + playerUuid).withHeader("token", token)
@@ -121,7 +121,7 @@ public class PopolConnector {
     }
 
     // Remove member from a team
-    public void deleteTeamPlayer(String teamId, String playerUuid, CompletionHandler<APITeam> completionHandler) {
+    public void deleteTeamPlayer(Long teamId, String playerUuid, CompletionHandler<APITeam> completionHandler) {
         // Send DELETE to team/:id/:uuid
         new APIRequest<APITeam>("DELETE", host, "/team/" + teamId + "/" + playerUuid).withHeader("token", token)
                 .execute(APITeam.class, completionHandler);
