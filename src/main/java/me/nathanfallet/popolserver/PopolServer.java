@@ -11,8 +11,10 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -60,6 +62,15 @@ public class PopolServer extends JavaPlugin {
         // Init players
         for (Player player : Bukkit.getOnlinePlayers()) {
             getPlayers().add(new PopolPlayer(player));
+        }
+
+        // Clear custom entities
+        for (World world : Bukkit.getWorlds()) {
+            for (Entity entity : world.getEntities()) {
+                if (entity.getCustomName() != null && entity.getCustomName().startsWith(ChatColor.RESET + "")) {
+                    entity.remove();
+                }
+            }
         }
 
         // Register channel to talk with BungeeCord
@@ -125,6 +136,11 @@ public class PopolServer extends JavaPlugin {
                     // Apply
                     getPlayer(player.getUniqueId()).getScoreboard().update(player, lines);
                 }
+
+                // Refresh leaderboards
+                for (Leaderboard leaderboard : getLeaderboards().values()) {
+                    leaderboard.update();
+                }
             }
         }, 0, 20);
 
@@ -132,11 +148,6 @@ public class PopolServer extends JavaPlugin {
         Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
             @Override
             public void run() {
-                // Refresh leaderboards
-                for (Leaderboard leaderboard : getLeaderboards().values()) {
-                    leaderboard.update();
-                }
-
                 // Save leaderboards
                 saveLeaderboards();
             }
