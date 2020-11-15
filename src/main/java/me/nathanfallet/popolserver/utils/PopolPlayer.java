@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import me.nathanfallet.popolserver.PopolServer;
 import me.nathanfallet.popolserver.api.APIPlayer;
 import me.nathanfallet.popolserver.api.APIRequest.CompletionHandler;
+import me.nathanfallet.popolserver.events.PopolPlayerLoadedEvent;
 import me.nathanfallet.popolserver.api.APIResponseStatus;
 
 public class PopolPlayer {
@@ -44,6 +45,9 @@ public class PopolPlayer {
 
                     // Set operator
                     player.setOp(object.administrator != null && object.administrator.booleanValue());
+
+                    // Player loaded, call event
+                    Bukkit.getPluginManager().callEvent(new PopolPlayerLoadedEvent(player, PopolPlayer.this));
                 } else {
                     // Error, disconnect player
                     player.kickPlayer("Erreur lors de la vérification de votre identité dans la base de données !");
