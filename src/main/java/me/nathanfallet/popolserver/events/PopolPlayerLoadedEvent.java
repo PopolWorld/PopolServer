@@ -11,6 +11,11 @@ public class PopolPlayerLoadedEvent extends PlayerEvent {
     // Bukkit requirement
     private static final HandlerList handlers = new HandlerList();
 
+    // Bukkit requirement
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
+
     // Properties
     private PopolPlayer pp;
 
