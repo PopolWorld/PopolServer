@@ -85,7 +85,7 @@ public class Leaderboard {
         if (generator == null) {
             // Set error line
             for (ArmorStand armor : armors) {
-                armor.setCustomName(ChatColor.RESET + "" + ChatColor.RED + "---------------------------");
+                armor.setCustomName(ChatColor.RED + "---------------------------");
             }
 
             // And stop here
@@ -99,14 +99,14 @@ public class Leaderboard {
             // Check line type
             if (i == 0) {
                 // Header
-                armor.setCustomName(ChatColor.RESET + "" + ChatColor.YELLOW + "------- " + ChatColor.GOLD
+                armor.setCustomName(ChatColor.YELLOW + "------- " + ChatColor.GOLD
                         + generator.getTitle() + ChatColor.YELLOW + " ---------");
             } else if (i == limit + 1) {
                 // Footer
-                armor.setCustomName(ChatColor.RESET + "" + ChatColor.YELLOW + "---------------------------");
+                armor.setCustomName(ChatColor.YELLOW + "---------------------------");
             } else {
                 // Line
-                armor.setCustomName(ChatColor.RESET + "" + ChatColor.GOLD + i + ". " + ChatColor.YELLOW
+                armor.setCustomName(ChatColor.GOLD + "" + i + ". " + ChatColor.YELLOW
                         + (lines.size() >= i ? lines.get(i - 1) : ""));
             }
             i++;

@@ -68,7 +68,7 @@ public class PopolServer extends JavaPlugin {
         // Clear custom entities
         for (World world : Bukkit.getWorlds()) {
             for (Entity entity : world.getEntities()) {
-                if (entity.getCustomName() != null && entity.getCustomName().startsWith(ChatColor.RESET + "")) {
+                if (entity.getCustomName() != null && entity.getCustomName().startsWith(ChatColor.COLOR_CHAR + "")) {
                     entity.remove();
                 }
             }
@@ -171,6 +171,9 @@ public class PopolServer extends JavaPlugin {
         saveLeaderboards();
 
         // Clear leaderboards and generators
+        for (Leaderboard leaderboard : getLeaderboards().values()) {
+            leaderboard.kill();
+        }
         leaderboards = null;
         leaderboardGenerators = null;
 
