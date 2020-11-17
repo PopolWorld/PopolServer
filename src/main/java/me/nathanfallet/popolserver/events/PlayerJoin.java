@@ -23,6 +23,11 @@ public class PlayerJoin implements org.bukkit.event.Listener, net.md_5.bungee.ap
         event.getPlayer().sendMessage(ChatColor.YELLOW + "Bienvenue sur PopolWorld ! Faites " + ChatColor.GOLD
                 + "/menu " + ChatColor.YELLOW + "pour changer de serveur.");
 
+        // Teleport to spawn if first join
+        if (!event.getPlayer().hasPlayedBefore()) {
+            event.getPlayer().teleport(PopolServer.getInstance().getSpawn());
+        }
+
         // Update status
         PopolServer.getInstance().sendStatus();
     }
