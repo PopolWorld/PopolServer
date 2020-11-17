@@ -3,11 +3,10 @@ package me.nathanfallet.popolserver.api;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
 import java.util.HashMap;
-
-import javax.net.ssl.HttpsURLConnection;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -15,18 +14,18 @@ import com.google.gson.GsonBuilder;
 public class APIRequest<T> {
 
     private String method;
-    private String host;
     private String path;
+    private APIConfiguration configuration;
     private HashMap<String, String> headers;
     private HashMap<String, Object> queryItems;
     private String body;
     private int httpResult;
 
-    public APIRequest(String method, String host, String path) {
+    public APIRequest(String method, String path, APIConfiguration configuration) {
         // Get request parameters
         this.method = method;
-        this.host = host;
         this.path = path;
+        this.configuration = configuration;
         this.headers = new HashMap<>();
         this.queryItems = new HashMap<>();
     }
@@ -48,7 +47,8 @@ public class APIRequest<T> {
 
     public URL getURL() {
         try {
-            URI uri = new URI("https", null, host, 443, path, getQuery(), null);
+            URI uri = new URI(configuration.scheme, null, configuration.host, configuration.port, path, getQuery(),
+                    null);
 
             return uri.toURL();
         } catch (Exception e) {
@@ -78,7 +78,7 @@ public class APIRequest<T> {
     public void execute(Class<T> classOfT, CompletionHandler<T> completionHandler) {
         try {
             // Create the request based on give parameters
-            HttpsURLConnection con = (HttpsURLConnection) getURL().openConnection();
+            HttpURLConnection con = (HttpURLConnection) getURL().openConnection();
             con.setRequestMethod(method);
             for (String key : headers.keySet()) {
                 con.setRequestProperty(key, headers.get(key));

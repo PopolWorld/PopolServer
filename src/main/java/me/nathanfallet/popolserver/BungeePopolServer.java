@@ -2,6 +2,7 @@ package me.nathanfallet.popolserver;
 
 import java.io.File;
 
+import me.nathanfallet.popolserver.api.APIConfiguration;
 import me.nathanfallet.popolserver.api.APIServer;
 import me.nathanfallet.popolserver.api.PopolConnector;
 import me.nathanfallet.popolserver.commands.StopCommand;
@@ -62,7 +63,7 @@ public class BungeePopolServer extends Plugin {
 
                 // Create connector with config
                 connector = new PopolConnector(config.getString("id"), config.getString("token"),
-                        config.getString("host"));
+                        new APIConfiguration(config.getString("scheme"), config.getString("host")));
             } catch (Exception e) {
                 // Error
                 e.printStackTrace();

@@ -9,16 +9,16 @@ public class PopolConnector {
     // Properties
     private String id;
     private String token;
-    private String host;
+    private APIConfiguration configuration;
 
     // Cached current server
     private APIServer cached;
 
     // Constructor
-    public PopolConnector(String id, String token, String host) {
+    public PopolConnector(String id, String token, APIConfiguration configuration) {
         this.id = id;
         this.token = token;
-        this.host = host;
+        this.configuration = configuration;
     }
 
     // Retrieve server from cache
@@ -33,19 +33,20 @@ public class PopolConnector {
     // Get server list
     public void getServer(CompletionHandler<APIServer[]> completionHandler) {
         // Send GET to server
-        new APIRequest<APIServer[]>("GET", host, "/server/").execute(APIServer[].class, completionHandler);
+        new APIRequest<APIServer[]>("GET", "/server/", configuration).execute(APIServer[].class, completionHandler);
     }
 
     // Get a server by id
     public void getServer(String serverId, CompletionHandler<APIServer> completionHandler) {
         // Send GET to server/:id
-        new APIRequest<APIServer>("GET", host, "/server/" + serverId).execute(APIServer.class, completionHandler);
+        new APIRequest<APIServer>("GET", "/server/" + serverId, configuration).execute(APIServer.class,
+                completionHandler);
     }
 
     // Update current server
     public void putServer(APIServer server) {
         // Send PUT to server/:id
-        new APIRequest<APIServer>("PUT", host, "/server/" + id).withHeader("token", token)
+        new APIRequest<APIServer>("PUT", "/server/" + id, configuration).withHeader("token", token)
                 .withBody(new GsonBuilder().create().toJson(server))
                 .execute(APIServer.class, new CompletionHandler<APIServer>() {
                     @Override
@@ -63,13 +64,14 @@ public class PopolConnector {
     // Get a player by uuid
     public void getPlayer(String playerUUID, CompletionHandler<APIPlayer> completionHandler) {
         // Send GET to player/:uuid
-        new APIRequest<APIPlayer>("GET", host, "/player/" + playerUUID).execute(APIPlayer.class, completionHandler);
+        new APIRequest<APIPlayer>("GET", "/player/" + playerUUID, configuration).execute(APIPlayer.class,
+                completionHandler);
     }
 
     // Update a player
     public void putPlayer(APIPlayer player, CompletionHandler<APIPlayer> completionHandler) {
         // Send PUT to player/:uuid
-        new APIRequest<APIPlayer>("PUT", host, "/player/" + player.uuid).withHeader("token", token)
+        new APIRequest<APIPlayer>("PUT", "/player/" + player.uuid, configuration).withHeader("token", token)
                 .withBody(new GsonBuilder().create().toJson(player)).execute(APIPlayer.class, completionHandler);
     }
 
@@ -80,34 +82,34 @@ public class PopolConnector {
     // Get team leaderboard
     public void getTeamLeaderboard(int limit, CompletionHandler<APITeam[]> completionHandler) {
         // Send GET to team/leaderboard/:limit
-        new APIRequest<APITeam[]>("GET", host, "/team/leaderboard/" + limit).execute(APITeam[].class,
+        new APIRequest<APITeam[]>("GET", "/team/leaderboard/" + limit, configuration).execute(APITeam[].class,
                 completionHandler);
     }
 
     // Get a team
     public void getTeam(Long teamId, CompletionHandler<APITeam> completionHandler) {
         // Send GET to team/:id
-        new APIRequest<APITeam>("GET", host, "/team/" + teamId).execute(APITeam.class, completionHandler);
+        new APIRequest<APITeam>("GET", "/team/" + teamId, configuration).execute(APITeam.class, completionHandler);
     }
 
     // Update a team
     public void putTeam(APITeam team, CompletionHandler<APITeam> completionHandler) {
         // Send PUT to team/:id
-        new APIRequest<APITeam>("PUT", host, "/team/" + team.id).withHeader("token", token)
+        new APIRequest<APITeam>("PUT", "/team/" + team.id, configuration).withHeader("token", token)
                 .withBody(new GsonBuilder().create().toJson(team)).execute(APITeam.class, completionHandler);
     }
 
     // Delete a team
     public void deleteTeam(Long teamId, CompletionHandler<APIMessage> completionHandler) {
         // Send DELETE to team/:id
-        new APIRequest<APIMessage>("DELETE", host, "/team/" + teamId).withHeader("token", token)
+        new APIRequest<APIMessage>("DELETE", "/team/" + teamId, configuration).withHeader("token", token)
                 .execute(APIMessage.class, completionHandler);
     }
 
     // Create a team
     public void postTeam(APITeamCreation team, CompletionHandler<APITeam> completionHandler) {
         // Send POST to team
-        new APIRequest<APITeam>("POST", host, "/team/").withHeader("token", token)
+        new APIRequest<APITeam>("POST", "/team/", configuration).withHeader("token", token)
                 .withBody(new GsonBuilder().create().toJson(team)).execute(APITeam.class, completionHandler);
     }
 
@@ -115,7 +117,7 @@ public class PopolConnector {
     public void postTeamPlayer(Long teamId, String playerUuid, String role,
             CompletionHandler<APITeam> completionHandler) {
         // Send POST to team/:id/:uuid
-        new APIRequest<APITeam>("POST", host, "/team/" + teamId + "/" + playerUuid).withHeader("token", token)
+        new APIRequest<APITeam>("POST", "/team/" + teamId + "/" + playerUuid, configuration).withHeader("token", token)
                 .withBody(new GsonBuilder().create().toJson(new APITeamMember(role)))
                 .execute(APITeam.class, completionHandler);
     }
@@ -123,8 +125,8 @@ public class PopolConnector {
     // Remove member from a team
     public void deleteTeamPlayer(Long teamId, String playerUuid, CompletionHandler<APITeam> completionHandler) {
         // Send DELETE to team/:id/:uuid
-        new APIRequest<APITeam>("DELETE", host, "/team/" + teamId + "/" + playerUuid).withHeader("token", token)
-                .execute(APITeam.class, completionHandler);
+        new APIRequest<APITeam>("DELETE", "/team/" + teamId + "/" + playerUuid, configuration)
+                .withHeader("token", token).execute(APITeam.class, completionHandler);
     }
 
 }

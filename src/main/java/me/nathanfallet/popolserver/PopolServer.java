@@ -18,6 +18,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import me.nathanfallet.popolserver.api.APIConfiguration;
 import me.nathanfallet.popolserver.api.APIServer;
 import me.nathanfallet.popolserver.api.PopolConnector;
 import me.nathanfallet.popolserver.commands.LeaderboardCommand;
@@ -184,7 +185,7 @@ public class PopolServer extends JavaPlugin {
             try {
                 // Create connector with config
                 connector = new PopolConnector(getConfig().getString("id"), getConfig().getString("token"),
-                        getConfig().getString("host"));
+                        new APIConfiguration(getConfig().getString("scheme"), getConfig().getString("host")));
             } catch (Exception e) {
                 // Error
                 e.printStackTrace();
