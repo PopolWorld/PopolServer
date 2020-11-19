@@ -124,7 +124,7 @@ public class PopolServer extends JavaPlugin {
 
                     // Money
                     lines.add(ChatColor.WHITE + ""
-                            + (pp.getCached() != null ? pp.getCached().money + " unités" : "Chargement..."));
+                            + (pp.getCached() != null ? pp.getCached().money + "₽" : "Chargement..."));
 
                     // Extra lines from other plugins
                     for (ScoreboardGenerator generator : getScoreboardGenerators()) {

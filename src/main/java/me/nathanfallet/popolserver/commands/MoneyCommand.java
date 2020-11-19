@@ -31,7 +31,7 @@ public class MoneyCommand implements CommandExecutor {
                     // Check result
                     if (money != null) {
                         // Show balance
-                        player.sendMessage(ChatColor.GREEN + PopolMoney.name + " : " + money + " unités");
+                        player.sendMessage(ChatColor.GREEN + PopolMoney.name + " : " + money + "₽");
                     } else {
                         // Error
                         player.sendMessage(ChatColor.RED + "Impossible de vérifier votre compte !");
