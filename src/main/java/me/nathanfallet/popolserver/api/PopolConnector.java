@@ -129,4 +129,13 @@ public class PopolConnector {
                 .withHeader("token", token).execute(APITeam.class, completionHandler);
     }
 
+    // Edit team member
+    public void putTeamPlayer(Long teamId, String playerUuid, String role,
+            CompletionHandler<APITeam> completionHandler) {
+        // Send PUT to team/:id/:uuid
+        new APIRequest<APITeam>("PUT", "/team/" + teamId + "/" + playerUuid, configuration).withHeader("token", token)
+                .withBody(new GsonBuilder().create().toJson(new APITeamMember(role)))
+                .execute(APITeam.class, completionHandler);
+    }
+
 }
