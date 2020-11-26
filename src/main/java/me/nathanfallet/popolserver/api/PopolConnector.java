@@ -138,4 +138,30 @@ public class PopolConnector {
                 .execute(APITeam.class, completionHandler);
     }
 
+    /**
+     * Jobs
+     */
+
+    // Get a job for a player
+    public void getJob(String playerUUID, String job, CompletionHandler<APIJob> completionHandler) {
+        // Send GET to job/:uuid/:job
+        new APIRequest<APIJob>("GET", "/job/" + playerUUID + "/" + job, configuration).execute(APIJob.class,
+                completionHandler);
+    }
+
+    // Update a job for a player
+    public void putJob(APIJob job, CompletionHandler<APIJob> completionHandler) {
+        // Send PUT to job/:uuid/:job
+        new APIRequest<APIJob>("PUT", "/job/" + job.playerUuid + "/" + job.job, configuration)
+                .withHeader("token", token).withBody(new GsonBuilder().create().toJson(job))
+                .execute(APIJob.class, completionHandler);
+    }
+
+    // Create a job for a player
+    public void postJob(String playerUUID, String job, CompletionHandler<APIJob> completionHandler) {
+        // Send POST to job/:uuid/:job
+        new APIRequest<APIJob>("POST", "/job/" + playerUUID + "/" + job, configuration).withHeader("token", token)
+                .execute(APIJob.class, completionHandler);
+    }
+
 }
