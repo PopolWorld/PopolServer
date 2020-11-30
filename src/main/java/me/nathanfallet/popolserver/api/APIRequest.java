@@ -76,9 +76,12 @@ public class APIRequest<T> {
     }
 
     public void execute(Class<T> classOfT, CompletionHandler<T> completionHandler) {
+        // Init object
+        HttpURLConnection con = null;
+
         try {
             // Create the request based on give parameters
-            HttpURLConnection con = (HttpURLConnection) getURL().openConnection();
+            con = (HttpURLConnection) getURL().openConnection();
             con.setRequestMethod(method);
             for (String key : headers.keySet()) {
                 con.setRequestProperty(key, headers.get(key));
@@ -114,10 +117,18 @@ public class APIRequest<T> {
 
             // Return object
             completionHandler.completionHandler(gson.fromJson(json, classOfT), statusForCode(httpResult));
-            return;
         } catch (Exception e) {
             // If it fails, return a null object
             completionHandler.completionHandler(null, statusForCode(httpResult));
+        } finally {
+            // Close connection if possible (avoid memory leaks)
+            if (con != null) {
+                try {
+                    con.disconnect();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
