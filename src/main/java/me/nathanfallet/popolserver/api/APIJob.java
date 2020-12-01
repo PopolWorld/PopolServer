@@ -7,6 +7,7 @@ public class APIJob {
     public String playerUuid;
     public Long experience;
     public Boolean active;
+    public APIPlayer player;
 
     public APIJob(Long id, String job, String playerUuid, Long experience, Boolean active) {
         this.id = id;

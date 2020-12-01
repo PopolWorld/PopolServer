@@ -142,6 +142,19 @@ public class PopolConnector {
      * Jobs
      */
 
+    // Get job leaderboard
+    public void getJobLeaderboard(int limit, CompletionHandler<APIJob[]> completionHandler) {
+        // Send GET to job/leaderboard/:limit
+        new APIRequest<APIJob[]>("GET", "/job/leaderboard/" + limit, configuration).execute(APIJob[].class,
+                completionHandler);
+    }
+
+    // Get a job for a player
+    public void getJobs(String playerUUID, CompletionHandler<APIJob[]> completionHandler) {
+        // Send GET to job/:uuid
+        new APIRequest<APIJob[]>("GET", "/job/" + playerUUID, configuration).execute(APIJob[].class, completionHandler);
+    }
+
     // Get a job for a player
     public void getJob(String playerUUID, String job, CompletionHandler<APIJob> completionHandler) {
         // Send GET to job/:uuid/:job
