@@ -177,4 +177,29 @@ public class PopolConnector {
                 .execute(APIJob.class, completionHandler);
     }
 
+    /**
+     * Chunks
+     */
+
+    // Get chunks for a region
+    public void getChunks(Long x, Long z, CompletionHandler<APIChunk[]> completionHandler) {
+        // Send GET to /chunk/region/:x/:z
+        new APIRequest<APIChunk[]>("GET", "/chunk/region/" + x + "/" + z, configuration).execute(APIChunk[].class,
+                completionHandler);
+    }
+
+    // Claim a chunk
+    public void postChunk(Long x, Long z, Long teamId, CompletionHandler<APIChunk> completionHandler) {
+        // Send POST to /chunk/claim/:x/:z/:teamId
+        new APIRequest<APIChunk>("POST", "/chunk/claim/" + x + "/" + z + "/" + teamId, configuration)
+                .withHeader("token", token).execute(APIChunk.class, completionHandler);
+    }
+
+    // Unclaim a chunk
+    public void deleteChunk(Long x, Long z, CompletionHandler<APIChunk> completionHandler) {
+        // Send DELETE to /chunk/claim/:x/:z
+        new APIRequest<APIChunk>("DELETE", "/chunk/claim/" + x + "/" + z, configuration).withHeader("token", token)
+                .execute(APIChunk.class, completionHandler);
+    }
+
 }
