@@ -196,10 +196,10 @@ public class PopolConnector {
     }
 
     // Unclaim a chunk
-    public void deleteChunk(Long x, Long z, CompletionHandler<APIChunk> completionHandler) {
+    public void deleteChunk(Long x, Long z, CompletionHandler<APIMessage> completionHandler) {
         // Send DELETE to /chunk/claim/:x/:z
-        new APIRequest<APIChunk>("DELETE", "/chunk/claim/" + x + "/" + z, configuration).withHeader("token", token)
-                .execute(APIChunk.class, completionHandler);
+        new APIRequest<APIMessage>("DELETE", "/chunk/claim/" + x + "/" + z, configuration).withHeader("token", token)
+                .execute(APIMessage.class, completionHandler);
     }
 
 }
