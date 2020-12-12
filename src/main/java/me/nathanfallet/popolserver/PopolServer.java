@@ -53,6 +53,7 @@ public class PopolServer extends JavaPlugin {
     private List<ScoreboardGenerator> scoreboardGenerators;
     private Map<String, LeaderboardGenerator> leaderboardGenerators;
     private Map<String, Leaderboard> leaderboards;
+    private Location spawn;
 
     // Enable plugin
     @Override
@@ -306,36 +307,44 @@ public class PopolServer extends JavaPlugin {
 
     // Get spawn location
     public Location getSpawn() {
-        // Get file
-        File f = new File(getDataFolder(), "spawn.yml");
+        // Check if spawn is loaded
+        if (spawn == null) {
+            // Get file
+            File f = new File(getDataFolder(), "spawn.yml");
 
-        // Return default spawn location if it doesn't exist
-        if (!f.exists()) {
-            return Bukkit.getWorlds().get(0).getSpawnLocation();
+            // Return default spawn location if it doesn't exist
+            if (!f.exists()) {
+                return Bukkit.getWorlds().get(0).getSpawnLocation();
+            }
+
+            // Else, read from file
+            FileConfiguration config = YamlConfiguration.loadConfiguration(f);
+            spawn = new Location(Bukkit.getWorld(config.getString("world")), config.getDouble("x"),
+                    config.getDouble("y"), config.getDouble("z"));
+            spawn.setYaw(config.getLong("yaw"));
+            spawn.setPitch(config.getLong("pitch"));
         }
 
-        // Else, read from file
-        FileConfiguration config = YamlConfiguration.loadConfiguration(f);
-        Location l = new Location(Bukkit.getWorld(config.getString("world")), config.getDouble("x"),
-                config.getDouble("y"), config.getDouble("z"));
-        l.setYaw(config.getLong("yaw"));
-        l.setPitch(config.getLong("pitch"));
-        return l;
+        // Return spawn location
+        return spawn;
     }
 
     // Set spawn location
-    public void setSpawn(Location l) {
+    public void setSpawn(Location spawn) {
+        // Update loaded spawn
+        this.spawn = spawn;
+
         // Get file
         File f = new File(getDataFolder(), "spawn.yml");
         FileConfiguration config = YamlConfiguration.loadConfiguration(f);
 
         // Set location
-        config.set("world", l.getWorld().getName());
-        config.set("x", l.getX());
-        config.set("y", l.getY());
-        config.set("z", l.getZ());
-        config.set("yaw", l.getYaw());
-        config.set("pitch", l.getPitch());
+        config.set("world", spawn.getWorld().getName());
+        config.set("x", spawn.getX());
+        config.set("y", spawn.getY());
+        config.set("z", spawn.getZ());
+        config.set("yaw", spawn.getYaw());
+        config.set("pitch", spawn.getPitch());
 
         // Save
         try {
